@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens — the whole palette lives here.
+ * Placeholder values for now; refined during the design pass.
+ * Small and committed: paper ground, warm ink, two sticky-note accents.
+ */
+@theme {
+  --color-paper: #f8f3ea;
+  --color-ink: #33291f;
+  --color-note-yellow: #f6dd8f;
+  --color-note-blue: #bcd8d5;
+
+  --font-display: "Display Placeholder", ui-serif, Georgia, serif;
+  --font-body: ui-sans-serif, system-ui, sans-serif;
+}

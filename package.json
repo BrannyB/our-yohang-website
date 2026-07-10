@@ -1,0 +1,12 @@
+{
+  "name": "ouryohang-website",
+  "private": true,
+  "scripts": {
+    "dev": "tailwindcss -i src/input.css -o assets/style.css --watch",
+    "build": "tailwindcss -i src/input.css -o assets/style.css --minify"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.2",
+    "tailwindcss": "^4.3.2"
+  }
+}
