@@ -1,16 +1,237 @@
 @import "tailwindcss";
 
 /*
- * Design tokens — the whole palette lives here.
- * Placeholder values for now; refined during the design pass.
- * Small and committed: paper ground, warm ink, two sticky-note accents.
+ * Fraunces Variable — self-hosted, no CDN.
+ * Axes: opsz (9–144), wght (100–900), SOFT (0–100), WONK (0–1).
+ */
+@font-face {
+  font-family: "Fraunces Variable";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/fraunces-latin-full-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Fraunces Variable";
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/fraunces-latin-full-italic.woff2") format("woff2");
+}
+
+/*
+ * Design tokens — the whole palette lives here, and it is deliberately
+ * small: paper ground, warm ink, two sticky-note colors, one pen color
+ * for doodle accents. Nothing else.
  */
 @theme {
-  --color-paper: #f8f3ea;
-  --color-ink: #33291f;
-  --color-note-yellow: #f6dd8f;
-  --color-note-blue: #bcd8d5;
+  --color-paper: #f7f2e7;
+  --color-ink: #362c21;
+  --color-ink-soft: #6b5f50;
+  --color-note-yellow: #f8dd8c;
+  --color-note-blue: #bdd7d0;
+  --color-pen: #b9502f;
 
-  --font-display: "Display Placeholder", ui-serif, Georgia, serif;
-  --font-body: ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
+  --font-sans: ui-sans-serif, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
+
+  --shadow-lift: 0 1px 2px rgb(54 44 33 / 0.16), 0 10px 18px -12px rgb(54 44 33 / 0.35);
+}
+
+@layer base {
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    /* faint paper grain, generated inline — no image request */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.28 0 0 0 0 0.20 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  ::selection {
+    background-color: var(--color-note-yellow);
+    color: var(--color-ink);
+  }
+}
+
+@layer components {
+  /* Headline voice: soft, slightly wonky Fraunces */
+  .display {
+    font-family: var(--font-display);
+    font-variation-settings: "SOFT" 75, "WONK" 1;
+    font-optical-sizing: auto;
+  }
+
+  /* Handwriting voice for sticky notes: italic Fraunces, fully soft */
+  .handwriting {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "SOFT" 100, "WONK" 1;
+  }
+
+  /*
+   * A sticky note. Square-ish, flat color, the only shadow it gets is
+   * the small neutral one a real note would cast. Rotation is applied
+   * per-instance so no two notes lean the same way.
+   */
+  .sticky-note {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "SOFT" 100, "WONK" 1;
+    background-color: var(--color-note-yellow);
+    box-shadow: var(--shadow-lift);
+    padding: 1.1em 1.2em 1.4em;
+    line-height: 1.35;
+  }
+  .sticky-note--blue {
+    background-color: var(--color-note-blue);
+  }
+
+  /* A photo print: white border, a touch more at the bottom. */
+  .photo-print {
+    background-color: #fffdf8;
+    padding: 0.6rem 0.6rem 2.2rem;
+    box-shadow: var(--shadow-lift);
+  }
+
+  /* Dashed stand-in for a real app screenshot, swapped out later. */
+  .placeholder {
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    text-align: center;
+    border: 1px dashed rgb(54 44 33 / 0.25);
+    background-color: rgb(247 242 231 / 0.6);
+    font-size: 0.75rem;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+
+  /* Sideways film strip for flipping through screenshots. */
+  .strip {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(54 44 33 / 0.25) transparent;
+  }
+
+  /* Prev/next arrows for the strip — pointless without JS, so hidden until
+     site.js marks the document. */
+  .strip-btn {
+    display: none;
+    padding: 0.4rem 0.5rem;
+    color: var(--color-pen);
+    cursor: pointer;
+  }
+  .js .strip-btn {
+    display: inline-flex;
+  }
+  .strip-btn:hover {
+    translate: 0 -2px;
+  }
+  .strip-btn:focus-visible {
+    outline: 2px solid var(--color-pen);
+    outline-offset: 2px;
+  }
+
+  /* Honest FAQ — native <details>, styled as ruled lines in the book. */
+  .faq details {
+    border-top: 1px solid rgb(54 44 33 / 0.15);
+  }
+  .faq details:last-child {
+    border-bottom: 1px solid rgb(54 44 33 / 0.15);
+  }
+  .faq summary {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 1.1rem;
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-variation-settings: "SOFT" 75, "WONK" 1;
+    font-weight: 600;
+    font-size: 1.15rem;
+    list-style: none;
+  }
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq summary::after {
+    content: "+";
+    flex: none;
+    color: var(--color-pen);
+    font-size: 1.3rem;
+    line-height: 1;
+  }
+  .faq details[open] summary::after {
+    content: "\2013";
+  }
+  .faq summary:focus-visible {
+    outline: 2px solid var(--color-pen);
+    outline-offset: 2px;
+  }
+
+  /* A strip of translucent tape holding something to the page. */
+  .tape {
+    position: absolute;
+    top: -0.7rem;
+    left: 50%;
+    width: 5.5rem;
+    height: 1.5rem;
+    transform: translateX(-50%) rotate(-3deg);
+    background-color: rgb(255 253 248 / 0.55);
+    border-inline: 1px dashed rgb(54 44 33 / 0.12);
+    box-shadow: 0 1px 2px rgb(54 44 33 / 0.10);
+  }
+}
+
+/*
+ * Liveliness — all of it physical, none of it flashy.
+ * Both effects are gated on motion preference; the settle-in
+ * additionally requires JS (no-JS visitors just see the content).
+ */
+/* Mouse drag-to-scroll for the film strip (outside all layers so it wins
+   over the snap utilities while a drag is in progress). */
+.js .strip {
+  cursor: grab;
+  /* with the infinite loop active the scrollbar reads nonsense — hide it */
+  scrollbar-width: none;
+}
+.js .strip.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  user-select: none;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  /* Notes and prints lift a touch when you reach for them. */
+  .sticky-note,
+  .photo-print {
+    transition: rotate 0.25s ease-out, translate 0.25s ease-out, box-shadow 0.25s ease-out;
+  }
+  .sticky-note:hover,
+  .photo-print:hover {
+    translate: 0 -0.3rem;
+    box-shadow: 0 2px 3px rgb(54 44 33 / 0.14), 0 16px 24px -14px rgb(54 44 33 / 0.35);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Items settle onto the page the first time they scroll into view. */
+  .js [data-settle] {
+    opacity: 0;
+  }
+  .js [data-settle].is-set {
+    animation: settle 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--i, 0) * 90ms);
+  }
+  @keyframes settle {
+    from {
+      opacity: 0;
+      translate: 0 0.9rem;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
 }

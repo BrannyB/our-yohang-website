@@ -6,6 +6,7 @@
     "build": "tailwindcss -i src/input.css -o assets/style.css --minify"
   },
   "devDependencies": {
+    "@fontsource-variable/fraunces": "^5.2.9",
     "@tailwindcss/cli": "^4.3.2",
     "tailwindcss": "^4.3.2"
   }
